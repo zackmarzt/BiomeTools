@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiomeTools - Ferramentas Educacionais para Biomedicina</title>
+    <link rel="stylesheet" href="/Assets/CSS/style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🧬 BiomeTools</h1>
+                <p>Ferramentas Educacionais para Biomedicina</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="studentName" class="form-label">Nome do Estudante</label>
+                    <input type="text" id="studentName" class="form-control" placeholder="Digite seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail" class="form-label">Email Acadêmico</label>
+                    <input type="email" id="studentEmail" class="form-control" placeholder="seu.email@universidade.edu.br" required>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width">Entrar no BiomeTools</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🧬 BiomeTools</h1>
+                </div>
+                <div class="user-info">
+                    <span id="userWelcome"></span>
+                    <button id="logoutBtn" class="btn btn--outline btn--sm">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">
+                    📊 Dashboard
+                </button>
+                <button class="nav-tab" data-tab="tools">
+                    🧪 Ferramentas
+                </button>
+                <button class="nav-tab" data-tab="library">
+                    📚 Biblioteca
+                </button>
+                <button class="nav-tab" data-tab="studies">
+                    📅 Estudos
+                </button>
+                <button class="nav-tab" data-tab="settings">
+                    ⚙️ Configurações
+                </button>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="app-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="container">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Atividade Recente</h3>
+                                <div id="recentActivity">
+                                    <p>Bem-vindo ao BiomeTools! Comece explorando as ferramentas.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Estatísticas de Uso</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="toolsUsed">0</span>
+                                        <span class="stat-label">Ferramentas Usadas</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number" id="articlesAdded">0</span>
+                                        <span class="stat-label">Artigos Salvos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Acesso Rápido</h3>
+                                <div class="quick-access">
+                                    <button class="btn btn--secondary" onclick="switchTab('tools')">🧬 Tradutor Genético</button>
+                                    <button class="btn btn--secondary" onclick="switchTab('library')">📄 Adicionar Artigo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div id="tools" class="tab-content">
+                <div class="container">
+                    <h2>Ferramentas Biomédicas</h2>
+                    
+                    <!-- Tool Selection -->
+                    <div class="tool-selector">
+                        <button class="tool-btn active" data-tool="genetic">🧬 Tradutor Genético</button>
+                        <button class="tool-btn" data-tool="calculator">🧮 Calculadoras Lab</button>
+                        <button class="tool-btn" data-tool="quality">📊 Controle Qualidade</button>
+                    </div>
+
+                    <!-- Genetic Translator -->
+                    <div id="genetic-tool" class="tool-content active">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Tradutor de Sequências Genéticas</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Sequência de DNA (5' → 3')</label>
+                                    <textarea id="dnaInput" class="form-control" placeholder="Digite a sequência de DNA (ex: ATGGCATGCAAATTCGATGGCCTAA)" rows="3"></textarea>
+                                    <small>Use apenas as bases A, T, G, C</small>
+                                </div>
+                                
+                                <div class="translation-controls">
+                                    <button id="validateDna" class="btn btn--primary">Validar DNA</button>
+                                    <button id="translateToRna" class="btn btn--secondary" disabled>DNA → RNA</button>
+                                    <button id="translateToProtein" class="btn btn--secondary" disabled>RNA → Proteína</button>
+                                    <button id="analyzeFrames" class="btn btn--outline" disabled>Analisar Frames</button>
+                                </div>
+
+                                <div id="translationResults" class="translation-results"></div>
+                                
+                                <div id="codonTable" class="codon-table-container">
+                                    <h4>Tabela de Códons</h4>
+                                    <div class="codon-grid" id="codonGrid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Laboratory Calculator -->
+                    <div id="calculator-tool" class="tool-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Calculadoras de Laboratório</h3>
+                                
+                                <div class="calc-selector">
+                                    <button class="calc-btn active" data-calc="dilution">Diluições</button>
+                                    <button class="calc-btn" data-calc="molarity">Molaridade</button>
+                                    <button class="calc-btn" data-calc="units">Conv. Unidades</button>
+                                    <button class="calc-btn" data-calc="buffer">Soluções Tampão</button>
+                                </div>
+
+                                <div id="dilution-calc" class="calc-content active">
+                                    <h4>Calculadora de Diluições</h4>
+                                    <div class="calc-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Concentração Inicial (C₁)</label>
+                                            <input type="number" id="c1" class="form-control" placeholder="100">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Volume Inicial (V₁)</label>
+                                            <input type="number" id="v1" class="form-control" placeholder="10">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Concentração Final (C₂)</label>
+                                            <input type="number" id="c2" class="form-control" placeholder="10">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Volume Final (V₂)</label>
+                                            <input type="number" id="v2" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <button id="calculateDilution" class="btn btn--primary">Calcular</button>
+                                    <div id="dilutionResult" class="calc-result"></div>
+                                </div>
+
+                                <div id="molarity-calc" class="calc-content">
+                                    <h4>Calculadora de Molaridade</h4>
+                                    <div class="calc-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Massa (g)</label>
+                                            <input type="number" id="mass" class="form-control" placeholder="5.84">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Massa Molar (g/mol)</label>
+                                            <input type="number" id="molarMass" class="form-control" placeholder="58.44">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Volume (L)</label>
+                                            <input type="number" id="volume" class="form-control" placeholder="0.5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Molaridade (mol/L)</label>
+                                            <input type="number" id="molarity" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <button id="calculateMolarity" class="btn btn--primary">Calcular</button>
+                                    <div id="molarityResult" class="calc-result"></div>
+                                </div>
+
+                                <div id="units-calc" class="calc-content">
+                                    <h4>Conversão de Unidades</h4>
+                                    <div class="calc-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Valor</label>
+                                            <input type="number" id="unitValue" class="form-control" placeholder="1000">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">De</label>
+                                            <select id="fromUnit" class="form-control">
+                                                <option value="mg/mL">mg/mL</option>
+                                                <option value="μg/mL">μg/mL</option>
+                                                <option value="ng/mL">ng/mL</option>
+                                                <option value="g/L">g/L</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Para</label>
+                                            <select id="toUnit" class="form-control">
+                                                <option value="mg/mL">mg/mL</option>
+                                                <option value="μg/mL">μg/mL</option>
+                                                <option value="ng/mL">ng/mL</option>
+                                                <option value="g/L">g/L</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Resultado</label>
+                                            <input type="text" id="unitResult" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <button id="convertUnits" class="btn btn--primary">Converter</button>
+                                </div>
+
+                                <div id="buffer-calc" class="calc-content">
+                                    <h4>Soluções Tampão</h4>
+                                    <div class="buffer-list" id="bufferList"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quality Control -->
+                    <div id="quality-tool" class="tool-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Ferramentas de Controle de Qualidade</h3>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Dados de Controle (separados por vírgula)</label>
+                                    <textarea id="qcData" class="form-control" placeholder="95.2, 98.1, 96.5, 97.8, 95.9, 98.2, 96.1" rows="3"></textarea>
+                                </div>
+                                
+                                <button id="analyzeQC" class="btn btn--primary">Analisar Dados</button>
+                                
+                                <div id="qcResults" class="qc-results"></div>
+                                <div id="qcChart" class="qc-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Tab -->
+            <div id="library" class="tab-content">
+                <div class="container">
+                    <h2>Biblioteca de Pesquisas</h2>
+                    
+                    <div class="library-actions">
+                        <button id="addArticleBtn" class="btn btn--primary">📄 Adicionar Artigo</button>
+                        <button id="exportBibBtn" class="btn btn--outline">📄 Exportar Bibliografia</button>
+                    </div>
+
+                    <!-- Add Article Form -->
+                    <div id="addArticleForm" class="card hidden">
+                        <div class="card__body">
+                            <h3>Adicionar Novo Artigo</h3>
+                            <form id="articleForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Título</label>
+                                        <input type="text" id="articleTitle" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Autores</label>
+                                        <input type="text" id="articleAuthors" class="form-control" placeholder="Silva, J.; Santos, M." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Revista</label>
+                                        <input type="text" id="articleJournal" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Ano</label>
+                                        <input type="number" id="articleYear" class="form-control" min="1900" max="2025" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">DOI</label>
+                                        <input type="text" id="articleDoi" class="form-control" placeholder="10.1000/123456">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Disciplina</label>
+                                        <select id="articleSubject" class="form-control" required>
+                                            <option value="">Selecione...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tags (separadas por vírgula)</label>
+                                    <input type="text" id="articleTags" class="form-control" placeholder="bioquímica, enzimas, metabolismo">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Notas</label>
+                                    <textarea id="articleNotes" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">Salvar Artigo</button>
+                                    <button type="button" id="cancelArticle" class="btn btn--outline">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="library-search">
+                        <div class="search-grid">
+                            <input type="text" id="searchArticles" class="form-control" placeholder="Buscar artigos...">
+                            <select id="filterSubject" class="form-control">
+                                <option value="">Todas as disciplinas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Articles List -->
+                    <div id="articlesList" class="articles-list">
+                        <div class="empty-state">
+                            <p>Nenhum artigo adicionado ainda. Comece adicionando seu primeiro artigo científico!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Studies Tab -->
+            <div id="studies" class="tab-content">
+                <div class="container">
+                    <h2>Organizador de Estudos</h2>
+                    
+                    <div class="studies-grid">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Cronograma de Estudos</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Disciplina</label>
+                                    <select id="studySubject" class="form-control">
+                                        <option value="">Selecione uma disciplina...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Data</label>
+                                    <input type="date" id="studyDate" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tópicos de Estudo</label>
+                                    <textarea id="studyTopics" class="form-control" placeholder="Ex: Metabolismo da glicose, Ciclo de Krebs" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Horas Planejadas</label>
+                                    <input type="number" id="studyHours" class="form-control" min="0.5" max="12" step="0.5">
+                                </div>
+                                <button id="addStudyPlan" class="btn btn--primary">Adicionar ao Cronograma</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Progresso de Estudos</h3>
+                                <div id="studyProgress" class="study-progress">
+                                    <div class="progress-summary">
+                                        <div class="progress-item">
+                                            <span class="progress-label">Total de Horas</span>
+                                            <span class="progress-value" id="totalHours">0h</span>
+                                        </div>
+                                        <div class="progress-item">
+                                            <span class="progress-label">Esta Semana</span>
+                                            <span class="progress-value" id="weekHours">0h</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Cronograma Atual</h3>
+                            <div id="currentSchedule" class="schedule-list">
+                                <div class="empty-state">
+                                    <p>Nenhum estudo agendado. Adicione atividades ao seu cronograma!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="container">
+                    <h2>Configurações</h2>
+                    
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Perfil do Usuário</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Nome</label>
+                                    <input type="text" id="settingsName" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="settingsEmail" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Semestre Atual</label>
+                                    <select id="currentSemester" class="form-control">
+                                        <option value="1">1º Semestre</option>
+                                        <option value="2">2º Semestre</option>
+                                        <option value="3">3º Semestre</option>
+                                        <option value="4">4º Semestre</option>
+                                        <option value="5">5º Semestre</option>
+                                        <option value="6">6º Semestre</option>
+                                        <option value="7">7º Semestre</option>
+                                        <option value="8">8º Semestre</option>
+                                    </select>
+                                </div>
+                                <button id="saveSettings" class="btn btn--primary">Salvar Configurações</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Dados da Aplicação</h3>
+                                <div class="data-actions">
+                                    <button id="exportData" class="btn btn--outline">📄 Exportar Dados</button>
+                                    <button id="clearData" class="btn btn--outline">🗑️ Limpar Dados</button>
+                                </div>
+                                <p class="help-text">
+                                    Exporte seus dados para backup ou limpe todos os dados salvos na aplicação.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/Assets/JS/app.js"></script>
+</body>
+</html>
