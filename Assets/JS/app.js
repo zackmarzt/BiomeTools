@@ -195,10 +195,14 @@ class BiomeTools {
         };
         
         console.log('User created:', this.currentUser);
-        
-        // Save to localStorage
+
+        // Save to LocalStore
+        if (!window.userStore) {
+            window.userStore = new LocalStore('usuarios');
+        }
+        window.userStore.add(this.currentUser);
         this.saveUserData();
-        
+
         // Show main app
         this.showMainApp();
         this.showToast('Login realizado com sucesso!', 'success');
@@ -1338,22 +1342,34 @@ class BiomeTools {
 
     // Data Management
     loadUserData() {
-        const userData = localStorage.getItem('biometools_user');
-        if (userData) {
-            try {
-                this.currentUser = JSON.parse(userData);
-                console.log('User data loaded:', this.currentUser);
-            } catch (e) {
-                console.error('Error loading user data:', e);
-                this.currentUser = null;
-            }
+        if (!window.userStore) {
+            window.userStore = new LocalStore('usuarios');
+        }
+        const allUsers = window.userStore.getAll();
+        if (allUsers.length > 0) {
+            // Considera o último usuário salvo como o atual
+            this.currentUser = allUsers[allUsers.length - 1];
+            console.log('User data loaded from LocalStore:', this.currentUser);
+        } else {
+            this.currentUser = null;
         }
     }
 
     saveUserData() {
         if (this.currentUser) {
-            localStorage.setItem('biometools_user', JSON.stringify(this.currentUser));
-            console.log('User data saved:', this.currentUser);
+            // Atualiza o registro do usuário no LocalStore (evita duplicidade por email)
+            if (!window.userStore) {
+                window.userStore = new LocalStore('usuarios');
+            }
+            // Procura se já existe usuário com este email
+            const allUsers = window.userStore.getAll();
+            const existing = allUsers.find(u => u.email === this.currentUser.email);
+            if (existing) {
+                window.userStore.update(existing.id, this.currentUser);
+            } else {
+                window.userStore.add(this.currentUser);
+            }
+            console.log('User data saved in LocalStore:', this.currentUser);
         }
     }
 
